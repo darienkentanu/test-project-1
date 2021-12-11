@@ -13,8 +13,7 @@ type User struct {
 	Deleted_at time.Time
 }
 
-type User_Register struct {
-	Name     string `json:"name"`
+type User_Login struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
