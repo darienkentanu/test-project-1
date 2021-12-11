@@ -27,7 +27,7 @@ func NewTransactionController(TransactionModel database.TransactionModel, ItemMo
 func (tc *TransactionController) NewTransaction(c echo.Context) error {
 	var inputJson model.Transaction_Input
 	c.Bind(&inputJson)
-	// var items []model.Item
+	var detailItems []model.Transaction_Detail
 	var totalPrice float32
 	var totalCost float32
 	for _, item := range inputJson.Items {
@@ -39,7 +39,6 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 			echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
 		}
 
-		// tDetail.TransactionID =
 		exist, err := tc.ItemModel.CheckItemID(item.Id)
 		if err != nil {
 			log.Println(err)
@@ -57,11 +56,12 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 		tDetail.ItemQuantity = item.Quantity
 		tDetail.Created_at = time.Now()
 		tDetail.Updated_at = time.Now()
-		err = tc.TransactionModel.AddTransactionDetail(tDetail)
-		if err != nil {
-			log.Println(err)
-			return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
-		}
+		// err = tc.TransactionModel.AddTransactionDetail(tDetail)
+		// if err != nil {
+		// 	log.Println(err)
+		// 	return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
+		// }
+		detailItems = append(detailItems, tDetail)
 	}
 	t := model.Transaction{}
 	t.Number = helper.CreateTransactionNumber()
@@ -70,8 +70,8 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 	t.CostTotal = totalCost
 	t.Created_at = time.Now()
 	t.Updated_at = time.Now()
-	id, err := tc.TransactionModel.CreateTransaction(t)
-	fmt.Println(id, err)
+	id, err := tc.TransactionModel.CreateTransaction(t, detailItems)
+	t.Id = id
 	if err != nil {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
@@ -84,8 +84,14 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
 	}
+	items, err := tc.TransactionModel.GetTransactionDetailByTransactionID(id)
+	if err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
+	}
 	return c.JSON(http.StatusOK, M{
-		"status": "success",
-		"data":   t,
+		"status":      "success",
+		"Transaction": t,
+		"Detail":      items,
 	})
 }

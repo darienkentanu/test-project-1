@@ -32,3 +32,8 @@ type Transaction_Item_Input struct {
 	Id       int `json:"id"`
 	Quantity int `json:"quantity"`
 }
+
+type Transaction_Response struct {
+	Transaction       Transaction
+	TransactionDetail []Transaction_Detail `json:"transaction_detail"`
+}

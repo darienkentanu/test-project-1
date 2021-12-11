@@ -12,22 +12,23 @@ type TransactionModelImplementation struct {
 }
 
 type TransactionModel interface {
-	AddTransactionDetail(t model.Transaction_Detail) (err error)
-	CreateTransaction(t model.Transaction) (id int, err error)
+	addTransactionDetail(tx *sql.Tx, t model.Transaction_Detail) (err error)
+	CreateTransaction(t model.Transaction, d []model.Transaction_Detail) (id int, err error)
 	InsertTransactionID(id int) (err error)
+	GetTransactionDetailByTransactionID(id int) (details []model.Transaction_Detail, err error)
 }
 
 func NewTransactionModel(db *sql.DB) *TransactionModelImplementation {
 	return &TransactionModelImplementation{db: db}
 }
 
-func (tm *TransactionModelImplementation) AddTransactionDetail(t model.Transaction_Detail) (err error) {
-	tx, err := tm.db.Begin()
-	if err != nil {
-		tx.Rollback()
-		log.Println(err)
-		return err
-	}
+func (tm *TransactionModelImplementation) addTransactionDetail(tx *sql.Tx, t model.Transaction_Detail) (err error) {
+	// tx, err := tm.db.Begin()
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	log.Println(err)
+	// 	return err
+	// }
 	res, err := tx.Exec("insert into transaction_details(item_id, item_quantity, item_price, item_cost, created_at, updated_at) values(?,?,?,?,?,?)",
 		t.ItemID, t.ItemQuantity, t.ItemPrice, t.ItemCost, t.Created_at, t.Updated_at)
 	if err != nil {
@@ -46,11 +47,11 @@ func (tm *TransactionModelImplementation) AddTransactionDetail(t model.Transacti
 		log.Println(err)
 		return err
 	}
-	tx.Commit()
+	// tx.Commit()
 	return nil
 }
 
-func (tm *TransactionModelImplementation) CreateTransaction(t model.Transaction) (id int, err error) {
+func (tm *TransactionModelImplementation) CreateTransaction(t model.Transaction, d []model.Transaction_Detail) (id int, err error) {
 	tx, err := tm.db.Begin()
 	if err != nil {
 		tx.Rollback()
@@ -75,6 +76,13 @@ func (tm *TransactionModelImplementation) CreateTransaction(t model.Transaction)
 	if err != nil {
 		tx.Rollback()
 		return -1, err
+	}
+	for _, v := range d {
+		err := tm.addTransactionDetail(tx, v)
+		if err != nil {
+			tx.Rollback()
+			return -1, err
+		}
 	}
 	tx.Commit()
 	return int(id64), nil
@@ -103,4 +111,31 @@ func (tm *TransactionModelImplementation) InsertTransactionID(id int) (err error
 	}
 	tx.Commit()
 	return nil
+}
+
+func (tm *TransactionModelImplementation) GetTransactionDetailByTransactionID(id int) (details []model.Transaction_Detail, err error) {
+	tx, err := tm.db.Begin()
+	if err != nil {
+		tx.Rollback()
+		return details, err
+	}
+	rows, err := tx.Query("select * from transaction_details where transaction_id = ?", id)
+	if err != nil {
+		tx.Rollback()
+		return details, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var result model.Transaction_Detail
+		var deleted sql.NullTime
+		err = rows.Scan(&result.Id, &result.TransactionID, &result.ItemID, &result.ItemQuantity, &result.ItemPrice, &result.ItemCost,
+			&result.Created_at, &result.Updated_at, &deleted)
+		if err != nil {
+			tx.Rollback()
+			return details, err
+		}
+		details = append(details, result)
+	}
+	tx.Commit()
+	return details, nil
 }
