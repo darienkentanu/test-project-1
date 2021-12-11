@@ -35,7 +35,7 @@ func (uc *UserController) RegisterUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "error inserting to database")
 	}
-	return c.JSON(http.StatusAccepted, M{
+	return c.JSON(http.StatusCreated, M{
 		"status": "success",
 		"data":   u,
 	})
