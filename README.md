@@ -34,7 +34,7 @@ nb: if you're using docker please import script.sql to your docker database via 
 |---|---|---|---|
 | GET | /additem | add item | Yes 
 | GET | /edititem/:id | edit item by id | Yes 
-| GET | /getitem | Get list of all item | Yes 
+| GET | /getitems | Get list of all item | Yes 
 | GET | /deleteitem/:id | delete item by id | Yes
 |---|---|---|---|
 | GET | /newtransaction | create new transaction | Yes 
