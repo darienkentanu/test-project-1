@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	config.Migrate("KlikA2C;")
 	db, err := config.InitSQL()
 	if err != nil {
 		panic(err)

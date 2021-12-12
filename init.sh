@@ -1,0 +1,1 @@
+mysql -u KlikA2C -pKlikA2C123! KlikA2C < script.sql
