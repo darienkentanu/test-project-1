@@ -89,7 +89,7 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 		log.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
 	}
-	return c.JSON(http.StatusOK, M{
+	return c.JSON(http.StatusCreated, M{
 		"status":      "success",
 		"Transaction": t,
 		"Detail":      items,
