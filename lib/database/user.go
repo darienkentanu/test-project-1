@@ -117,7 +117,6 @@ func (um *UserModelImplementation) GetAccountByEmailWithToken(login model.User_L
 	var createdAtString string
 	var updatedAtString string
 	var deletedAtString sql.NullString
-	// var nullToken sql.NullString
 	err = row.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.Token,
 		&createdAtString, &updatedAtString, &deletedAtString)
 	if err != nil {

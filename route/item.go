@@ -16,5 +16,4 @@ func itemRoute(e *echo.Echo, db *sql.DB) {
 	e.POST("/additem", ic.AddItem, middlewares.IsLoggedIn)
 	e.DELETE("/deleteitem/:id", ic.DeleteItem, middlewares.IsLoggedIn)
 	e.PUT("/edititem/:id", ic.EditItem, middlewares.IsLoggedIn)
-	// return e
 }

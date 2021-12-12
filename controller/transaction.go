@@ -56,11 +56,6 @@ func (tc *TransactionController) NewTransaction(c echo.Context) error {
 		tDetail.ItemQuantity = item.Quantity
 		tDetail.Created_at = time.Now()
 		tDetail.Updated_at = time.Now()
-		// err = tc.TransactionModel.AddTransactionDetail(tDetail)
-		// if err != nil {
-		// 	log.Println(err)
-		// 	return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
-		// }
 		detailItems = append(detailItems, tDetail)
 	}
 	t := model.Transaction{}

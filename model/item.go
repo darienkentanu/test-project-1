@@ -9,5 +9,4 @@ type Item struct {
 	Cost       float32 `json:"cost"`
 	Created_at time.Time
 	Updated_at time.Time
-	// Deleted_at time.Time
 }

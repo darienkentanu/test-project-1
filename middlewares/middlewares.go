@@ -18,7 +18,7 @@ func CreateToken(id int) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() // Token expires after 1 hour
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // Token expires after 2 hour
 
 	claims["id"] = id
 
@@ -29,18 +29,3 @@ func CreateToken(id int) (string, error) {
 	}
 	return tokenString, nil
 }
-
-// func CurrentLoginID(c echo.Context) int {
-// 	token := c.Get("user").(*jwt.Token)
-// 	if token != nil && token.Valid {
-// 		claims := token.Claims.(jwt.MapClaims)
-// 		id := claims["id"]
-// 		switch id.(type) {
-// 		case float64:
-// 			return int(id.(float64))
-// 		default:
-// 			return id.(int)
-// 		}
-// 	}
-// 	return -1 // invalid user
-// }

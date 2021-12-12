@@ -13,5 +13,4 @@ func userRoute(e *echo.Echo, db *sql.DB) {
 	uc := controller.NewUserController(um)
 	e.POST("/register", uc.RegisterUser)
 	e.POST("/login", uc.LoginUser)
-	// return e
 }

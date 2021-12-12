@@ -23,12 +23,6 @@ func NewTransactionModel(db *sql.DB) *TransactionModelImplementation {
 }
 
 func (tm *TransactionModelImplementation) addTransactionDetail(tx *sql.Tx, t model.Transaction_Detail) (err error) {
-	// tx, err := tm.db.Begin()
-	// if err != nil {
-	// 	tx.Rollback()
-	// 	log.Println(err)
-	// 	return err
-	// }
 	res, err := tx.Exec("insert into transaction_details(item_id, item_quantity, item_price, item_cost, created_at, updated_at) values(?,?,?,?,?,?)",
 		t.ItemID, t.ItemQuantity, t.ItemPrice, t.ItemCost, t.Created_at, t.Updated_at)
 	if err != nil {
@@ -47,7 +41,6 @@ func (tm *TransactionModelImplementation) addTransactionDetail(tx *sql.Tx, t mod
 		log.Println(err)
 		return err
 	}
-	// tx.Commit()
 	return nil
 }
 

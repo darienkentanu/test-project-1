@@ -155,22 +155,22 @@ func TestNewTransaction(t *testing.T) {
 
 		c.SetPath(testCase.path)
 
-		// t.Run(testCase.name, func(t *testing.T) {
-		if testCase.condition(t, middleware.JWT([]byte(constants.JWT_SECRET))(tc.NewTransaction)(c)) {
-			assert.Equal(t, testCase.expectCode, rec.Code)
-			body := rec.Body.String()
+		t.Run(testCase.name, func(t *testing.T) {
+			if testCase.condition(t, middleware.JWT([]byte(constants.JWT_SECRET))(tc.NewTransaction)(c)) {
+				assert.Equal(t, testCase.expectCode, rec.Code)
+				body := rec.Body.String()
 
-			var response = struct {
-				Status string `json:"status"`
-				Data   M      `json:"data"`
-			}{}
-			err := json.Unmarshal([]byte(body), &response)
-			if err != nil {
-				assert.Error(t, err, "error")
+				var response = struct {
+					Status string `json:"status"`
+					Data   M      `json:"data"`
+				}{}
+				err := json.Unmarshal([]byte(body), &response)
+				if err != nil {
+					assert.Error(t, err, "error")
+				}
+				assert.Equal(t, testCase.response, response.Status)
 			}
-			assert.Equal(t, testCase.response, response.Status)
-		}
-		// })
+		})
 
 	}
 }

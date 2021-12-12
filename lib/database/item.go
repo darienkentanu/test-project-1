@@ -56,7 +56,6 @@ func (im *ItemModelImplementation) AddItem(newItem model.Item) (item model.Item,
 		return item, err
 	}
 	row := tx.QueryRow("select * from items where id = ?", id)
-	// nullDeleted := sql.NullString{}
 	err = row.Scan(&item.Id, &item.Name, &item.Price, &item.Cost,
 		&item.Created_at, &item.Updated_at)
 	if err != nil {
@@ -84,7 +83,6 @@ func (im *ItemModelImplementation) GetAllItems() (items []model.Item, err error)
 	defer rows.Close()
 	for rows.Next() {
 		var item = model.Item{}
-		// var nullDeleted = sql.NullTime{}
 		err := rows.Scan(&item.Id, &item.Name, &item.Price, &item.Cost, &item.Created_at,
 			&item.Updated_at)
 		if err != nil {

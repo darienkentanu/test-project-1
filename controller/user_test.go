@@ -19,7 +19,6 @@ func userSetup(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	// affected, err := res.RowsAffected()
 	return nil
 }
 
@@ -37,7 +36,6 @@ func insertDataUser(db *sql.DB) {
 	if err != nil {
 		panic(err)
 	}
-	// return nil
 }
 
 func TestRegisterUser(t *testing.T) {
@@ -61,8 +59,7 @@ func TestRegisterUser(t *testing.T) {
 	}
 
 	e, db := helper.InitEcho()
-	// userSetup(db)
-	// insertDataUser(db)
+
 	userSetup(db)
 	um := database.NewUserModel(db)
 	uc := NewUserController(um)
@@ -79,8 +76,6 @@ func TestRegisterUser(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		c.SetPath(testCase.path)
-		// fmt.Println(c.Path())
-		// t.FailNow()
 
 		t.Run(testCase.name, func(t *testing.T) {
 			if assert.NoError(t, uc.RegisterUser(c)) {
