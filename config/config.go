@@ -47,10 +47,13 @@ func InitSQLTest() (db *sql.DB, err error) {
 
 func Migrate(name string) {
 	if os.Getenv("CONN_STRING") == "" {
-		db, err := InitSQL()
+		db, err := sql.Open("mysql", "KlikA2C:KlikA2C123!@tcp(127.0.0.1:3306)/?charset=utf8&parseTime=True&loc=Local")
 		if err != nil {
-			fmt.Println(err)
-			return
+			panic(err)
+		}
+		err = db.Ping()
+		if err != nil {
+			panic(err)
 		}
 		defer db.Close()
 
