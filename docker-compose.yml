@@ -20,7 +20,7 @@ services:
     build: .
     restart: always
     environment:
-      CONN_STRING: root:password@tcp(db-container)/KlikA2C?charset=utf8&parseTime=True&loc=Local
+      CONN_STRING: KlikA2C:KlikA2C123!@tcp(db-container)/KlikA2C?charset=utf8&parseTime=True&loc=Local
     ports:
      - 8080:8080
     depends_on:

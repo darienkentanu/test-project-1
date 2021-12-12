@@ -21,7 +21,6 @@ ADD . /app
 ## we run go build to compile the binary
 ## executable of our Go program
 RUN go build -o KlikA2C .
-COPY init.sh /app/
 
 ## Our start command which kicks off
 ## our newly created binary executable

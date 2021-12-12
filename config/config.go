@@ -9,7 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func initSQLDocker() (db *sql.DB, err error) {
+func InitSQLDocker() (db *sql.DB, err error) {
 	db, err = sql.Open("mysql", os.Getenv("CONN_STRING"))
 	if err != nil {
 		return nil, err
@@ -28,9 +28,7 @@ func InitSQL() (db *sql.DB, err error) {
 	}
 	err = db.Ping()
 	if err != nil {
-		db, err := initSQLDocker()
-		return db, err
-		// return nil, err
+		return nil, err
 	}
 	return db, nil
 }
@@ -48,23 +46,27 @@ func InitSQLTest() (db *sql.DB, err error) {
 }
 
 func Migrate(name string) {
-	db, err := InitSQL()
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
+	if os.Getenv("CONN_STRING") == "" {
+		db, err := InitSQL()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer db.Close()
 
-	_, err = db.Exec("CREATE DATABASE if not exists " + name)
-	if err != nil {
-		panic(err)
-	}
+		_, err = db.Exec("CREATE DATABASE if not exists " + name)
+		if err != nil {
+			panic(err)
+		}
 
-	cmd := exec.Command("/bin/sh", "init.sh")
-	err = cmd.Run()
+		cmd := exec.Command("/bin/sh", "init.sh")
+		err = cmd.Run()
 
-	if err != nil {
-		fmt.Println(err.Error())
-		fmt.Println("errrror")
-		return
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+	} else {
+		fmt.Println("please import script.sql to your docker database via adminer -> localhost:8081")
 	}
 }

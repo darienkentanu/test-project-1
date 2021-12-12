@@ -23,6 +23,8 @@ In this project i use MVC architecture because it's the most common achitecture 
 ```
 $ go run main.go or $ docker-compose up --build
 ```
+nb: if you're using docker please import script.sql to your docker database via adminer -> localhost:8081
+
 # Endpoints
 
 | Method | Endpoint | Description| Authentication 
