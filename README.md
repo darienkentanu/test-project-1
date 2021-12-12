@@ -60,7 +60,7 @@ http://localhost:8080/newtransaction
 
 ```
 - example GET
-http://localhost:8080/getitem
+http://localhost:8080/getitems
 ```
 
 <br>
